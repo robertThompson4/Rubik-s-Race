@@ -1,0 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package rubik.s.race;
+
+/**
+ *
+ * @author robert
+ */
+public interface ICardListener {
+    public void cardClicked(Card card);
+}
