@@ -10,5 +10,5 @@ package rubik.s.race;
  * @author robert
  */
 public interface ICardListener {
-    public void cardClicked(Card card);
+    public void cardClicked(Tile tile);
 }

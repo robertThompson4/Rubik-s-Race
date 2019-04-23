@@ -33,10 +33,10 @@ public class GameBoard  extends JPanel implements ICardListener
 {
     private final int ROWS = 5;
     private final int COLUMNS = 5;
-    private Tile[][] cards = new Tile[5][5];
+    private Tile[][] tiles = new Tile[5][5];
     //private Card firstCard = null;
     //private Card secondCard = null;
-    private Color[][] cardColors = new Color[5][5];
+    private Color[][] tileColors = new Color[5][5];
     private boolean finishedGame;
     static long startTime = 0;
     private long endTime = 0;
@@ -47,11 +47,11 @@ public class GameBoard  extends JPanel implements ICardListener
     public GameBoard()
     {
         setLayout(new GridLayout(ROWS, COLUMNS));
-        initializeCards();
+        initializeTiles();
     }
 
 
-     public void initializeCards()
+     public void initializeTiles()
     {
         setColors();
         //cards = new ArrayList();
@@ -59,59 +59,60 @@ public class GameBoard  extends JPanel implements ICardListener
         {
             for(int c = 0; c < 5; c++)
             {
-                Tile newCard = new Card("");
-                newCard.setBackColor(cardColors[r][c]);
+                Tile newCard = new Tile("");
+                newCard.setBackColor(tileColors[r][c]);
                 //add(newCard);
                 //cards.add(newCard);
-                cards[r][c] = newCard;
+                tiles[r][c] = newCard;
                 newCard.addCardClickedListener(this);
 
                 //Collections.shuffle(cards);
-                add(cards[r][c]);
+                add(tiles[r][c]);
             }
         }
+        //shuffle function here
         startTime = getTime();
      }
 
     @Override
-    public void cardClicked(Card card) {
-        card.flip();
-        if(firstCard == null)
-        {
-            firstCard = card;
-        }
-        else if(secondCard == null)
-        {
-            secondCard = card;
-            
-            if(firstCard.getBackColor() == secondCard.getBackColor())
-            {
-                firstCard.makeMatched();
-                secondCard.makeMatched();
-            }
-            else
-            {
-                try {
-                    Thread.sleep(700);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                firstCard.flipBack();
-                secondCard.flipBack();  
-            }
-
-            firstCard = null;
-            secondCard = null;
-        }
-        finishedGame = checkWinsetColors();();
-        if(finishedGame)
-        {  
-            try {
-                endGame();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    public void cardClicked(Tile tile) {
+//        card.flip();
+//        if(firstCard == null)
+//        {
+//            firstCard = card;
+//        }
+//        else if(secondCard == null)
+//        {
+//            secondCard = card;
+//            
+//            if(firstCard.getBackColor() == secondCard.getBackColor())
+//            {
+//                firstCard.makeMatched();
+//                secondCard.makeMatched();
+//            }
+//            else
+//            {
+//                try {
+//                    Thread.sleep(700);
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                firstCard.flipBack();
+//                secondCard.flipBack();  
+//            }
+//
+//            firstCard = null;
+//            secondCard = null;
+//        }
+//        finishedGame = checkWinsetColors();();
+//        if(finishedGame)
+//        {  
+//            try {
+//                endGame();
+//            } catch (FileNotFoundException ex) {
+//                Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
     }
     
     public void endGame() throws FileNotFoundException
@@ -155,11 +156,13 @@ public class GameBoard  extends JPanel implements ICardListener
     {
         boolean gameFinished = true;
         
-        for(int i = 0; i < cards.size(); i++)
+        for(int r = 0; r < 3; r++)
         {
-            if(!cards.get(i).getIsMatched())
-            {
-                gameFinished = false;
+            for(int c=0;c<3;c++){
+//                if(!tiles[r][c].getIsMatched())
+//                {
+//                    gameFinished = false;
+//                }
             }
         }
         return gameFinished;
@@ -170,9 +173,10 @@ public class GameBoard  extends JPanel implements ICardListener
         //4 pieces of each of the 6 colors to be 
         
         //backColors = new ArrayList;
-        cardColors = new Color[5][5];
+        tileColors = new Color[5][5];
         Random random = new Random();
-
+        
+        
         for(int r = 0; r < 5; r++)
         {
             for(int c = 0; c < 5; c++)
@@ -180,15 +184,23 @@ public class GameBoard  extends JPanel implements ICardListener
 
             float red = random.nextFloat();
             float green = random.nextFloat();
-            float blue = random.nextFloat();
-            
-            Color newColor = new Color(red, green, blue);
-            cardColors[r][c] = newColor;
+            float blue = random.nextFloat();  
+            Color newColor = new Color(red, green, blue);  
+            tileColors[r][c] = newColor;
+            c++;
+            tileColors[r][c] = newColor;
+            c++;
+            tileColors[r][c] = newColor;
+            c++;
+            tileColors[r][c] = newColor;
+            c++;
             //backColors.add(newColor);
             }
         }
     }
 
+    
+   
 
         /*
     public void showHighScores()
@@ -227,4 +239,9 @@ public class GameBoard  extends JPanel implements ICardListener
                     JOptionPane.showMessageDialog(null,
                         scoreOutput, "Highscores",JOptionPane.PLAIN_MESSAGE);
     }*/
+
+//    @Override
+//    public void cardClicked(Card card) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 }

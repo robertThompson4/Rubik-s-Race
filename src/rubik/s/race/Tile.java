@@ -13,12 +13,12 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class Tile extends Button
 {
-    private Color backColor = Color.white;
-    private Color frontColor = null;
+    
+    public Color frontColor = null;
     private boolean isMatched;
     private ICardListener[][] clickListeners = new ICardListener[5][5];
     
@@ -39,11 +39,13 @@ public class Tile extends Button
         });
     }
 
-    public Color getBackColor()
-    {
-        return backColor;
-    }
+   
 
+     public void setBackColor(Color newFrontColor)
+    {
+        frontColor = newFrontColor;
+    }
+    
     public void addCardClickedListener(ICardListener listener)
     {
         clickListeners.add(listener);
