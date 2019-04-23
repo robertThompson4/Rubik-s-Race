@@ -33,6 +33,8 @@ public class GameBoard  extends JPanel implements ICardListener
 {
     private final int ROWS = 5;
     private final int COLUMNS = 5;
+    private int EmptyRowValue;
+    private int EmptyColValue;
     private Tile[][] tiles = new Tile[5][5];
     //private Card firstCard = null;
     //private Card secondCard = null;
@@ -65,17 +67,45 @@ public class GameBoard  extends JPanel implements ICardListener
                 //cards.add(newCard);
                 tiles[r][c] = newCard;
                 newCard.addCardClickedListener(this);
-
+                shuffleTile(5);
                 //Collections.shuffle(cards);
                 add(tiles[r][c]);
             }
         }
-        //shuffle function here
+       
         startTime = getTime();
      }
 
+     public void shuffleTile(int size){
+         Random random1 = new Random();
+         Random random2 = new Random();
+         boolean[][] check=new boolean[size][size];
+         int count=0;
+         int orgRValue=0;
+         int orgCValue=0;
+         while(count !=((size*size)-1)){
+             int rValue= random1.nextInt(size);
+             int cValue= random2.nextInt(size);
+             if(check[rValue][cValue]==false){
+                 tiles[rValue][cValue]=tiles[orgRValue][orgCValue];
+                 check[rValue][cValue]=true;
+                 orgCValue++;
+                 if(orgCValue==(size-1)){
+                     orgRValue++;
+                     orgCValue=0;
+                 }
+                     
+                 count++;
+             }
+         }
+             
+         
+     }
+     
+     
     @Override
     public void cardClicked(Tile tile) {
+        
 //        card.flip();
 //        if(firstCard == null)
 //        {
@@ -193,7 +223,7 @@ public class GameBoard  extends JPanel implements ICardListener
             tileColors[r][c] = newColor;
             c++;
             tileColors[r][c] = newColor;
-            c++;
+            
             //backColors.add(newColor);
             }
         }
