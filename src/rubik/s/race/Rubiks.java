@@ -40,12 +40,12 @@ public class Rubiks extends JFrame
    
     public Rubiks()
     {
-       
+        add(gameboard);
         setSize(500,500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         initializeMenu();
-        add(gameboard);
+        //add(gameboard);
         
         
     }

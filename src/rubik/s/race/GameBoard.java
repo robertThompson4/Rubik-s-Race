@@ -67,11 +67,12 @@ public class GameBoard  extends JPanel implements ICardListener
                 //cards.add(newCard);
                 tiles[r][c] = newCard;
                 newCard.addCardClickedListener(this);
-                shuffleTile(5);
+                
                 //Collections.shuffle(cards);
                 add(tiles[r][c]);
             }
         }
+        shuffleTile(5);
        
         startTime = getTime();
      }
@@ -90,7 +91,7 @@ public class GameBoard  extends JPanel implements ICardListener
                  tiles[rValue][cValue]=tiles[orgRValue][orgCValue];
                  check[rValue][cValue]=true;
                  orgCValue++;
-                 if(orgCValue==(size-1)){
+                 if(orgCValue==(size)){
                      orgRValue++;
                      orgCValue=0;
                  }
@@ -206,26 +207,46 @@ public class GameBoard  extends JPanel implements ICardListener
         tileColors = new Color[5][5];
         Random random = new Random();
         
-        
-        for(int r = 0; r < 5; r++)
-        {
-            for(int c = 0; c < 5; c++)
-            {
+        int r=0;
+        int c=0;
+       while (r!=5){
 
             float red = random.nextFloat();
             float green = random.nextFloat();
             float blue = random.nextFloat();  
-            Color newColor = new Color(red, green, blue);  
-            tileColors[r][c] = newColor;
-            c++;
-            tileColors[r][c] = newColor;
-            c++;
-            tileColors[r][c] = newColor;
-            c++;
-            tileColors[r][c] = newColor;
-            
-            //backColors.add(newColor);
+            Color newColor = new Color(red, green, blue);
+            if(c==5){
+                r++;
+                c=0;
             }
+            if(r!=5){
+            tileColors[r][c] = newColor;
+            c++;}
+            if(c==5){
+                r++;
+                c=0;
+            } 
+            if(r !=5){
+            tileColors[r][c] = newColor;
+            c++;}
+             if(c==5){
+                r++;
+                c=0;
+            }
+             if(r!=5){
+            tileColors[r][c] = newColor;
+            c++;}
+             if(c==5){
+                r++;
+                c=0;
+            }
+             if(r!=5){       
+                    
+            tileColors[r][c] = newColor;
+            c++;
+             }
+            //backColors.add(newColor);
+            
         }
     }
 

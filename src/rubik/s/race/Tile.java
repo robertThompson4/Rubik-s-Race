@@ -24,19 +24,19 @@ public class Tile extends Button
     
     public Tile(String label)
     {
-        super(label);
-            addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                if(!isMatched)
-                {
-                    for(ICardListener clickListener : clickListeners)
-                    {
-                        clickListener.cardClicked((Tile).getSource());
-                    }
-                }
-            }
-        });
+//        super(label);
+//            addMouseListener(new MouseAdapter(){
+//            @Override
+//            public void mouseClicked(MouseEvent e){
+//                if(!isMatched)
+//                {
+//                    for(ICardListener clickListener : clickListeners)
+//                    {
+//                        clickListener.cardClicked((Tile).getSource());
+//                    }
+//                }
+//            }
+//        });
     }
 
    
@@ -48,7 +48,7 @@ public class Tile extends Button
     
     public void addCardClickedListener(ICardListener listener)
     {
-        clickListeners.add(listener);
+//        clickListeners.add(listener);
     }
     
     
