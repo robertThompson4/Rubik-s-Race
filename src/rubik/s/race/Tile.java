@@ -13,30 +13,32 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class Tile extends Button
 {
-    
+    public int rValue;
+    public int cValue;
     public Color frontColor = null;
     private boolean isMatched;
-    private ICardListener[][] clickListeners = new ICardListener[5][5];
+    //private ICardListener[][] clickListeners = new ICardListener[5][5];
+    private ArrayList<ICardListener> clickListeners = new ArrayList<ICardListener>();
+    //private ArrayList<ArrayList<ICardListener>> clickListeners = new Array<ArrayList<ICardListener>>();
     
     public Tile(String label)
     {
-//        super(label);
-//            addMouseListener(new MouseAdapter(){
-//            @Override
-//            public void mouseClicked(MouseEvent e){
-//                if(!isMatched)
-//                {
-//                    for(ICardListener clickListener : clickListeners)
-//                    {
-//                        clickListener.cardClicked((Tile).getSource());
-//                    }
-//                }
-//            }
-//        });
+        super(label);
+            addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                if(!isMatched)
+                {
+                    clickListeners.forEach((clickListener) -> {
+                        clickListener.cardClicked((Tile)e.getSource());
+                    }); //for( clickListeners)
+                }
+            }
+        });
     }
 
    
@@ -44,11 +46,12 @@ public class Tile extends Button
      public void setBackColor(Color newFrontColor)
     {
         frontColor = newFrontColor;
+        setBackground(frontColor);
     }
     
     public void addCardClickedListener(ICardListener listener)
     {
-//        clickListeners.add(listener);
+        clickListeners.add(listener);
     }
     
     

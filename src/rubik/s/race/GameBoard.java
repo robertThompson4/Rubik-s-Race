@@ -33,8 +33,8 @@ public class GameBoard  extends JPanel implements ICardListener
 {
     private final int ROWS = 5;
     private final int COLUMNS = 5;
-    private int EmptyRowValue;
-    private int EmptyColValue;
+    private int BlackRowValue;
+    private int BlackColValue;
     private Tile[][] tiles = new Tile[5][5];
     //private Card firstCard = null;
     //private Card secondCard = null;
@@ -44,6 +44,7 @@ public class GameBoard  extends JPanel implements ICardListener
     private long endTime = 0;
     private long timePlayed = 0;
     private ArrayList<Long> highscores = new ArrayList();
+    private Color BLACK = new Color(0,0,0);
 
     
     public GameBoard()
@@ -63,16 +64,35 @@ public class GameBoard  extends JPanel implements ICardListener
             {
                 Tile newCard = new Tile("");
                 newCard.setBackColor(tileColors[r][c]);
+                newCard.rValue=r;
+                newCard.cValue=c;
                 //add(newCard);
                 //cards.add(newCard);
                 tiles[r][c] = newCard;
                 newCard.addCardClickedListener(this);
                 
                 //Collections.shuffle(cards);
-                add(tiles[r][c]);
+                
             }
         }
         shuffleTile(5);
+        for(int r = 0; r < 5; r++)
+        {
+            for(int c = 0; c < 5; c++)
+            {
+                add(tiles[r][c]);
+            }
+        }
+        for(int r = 0; r < 5; r++)
+        {
+            for(int c = 0; c < 5; c++)
+            {
+                if(tiles[r][c].frontColor==BLACK){
+                    BlackRowValue=r;
+                    BlackColValue=c;
+                }
+            }
+        }
        
         startTime = getTime();
      }
@@ -80,6 +100,9 @@ public class GameBoard  extends JPanel implements ICardListener
      public void shuffleTile(int size){
          Random random1 = new Random();
          Random random2 = new Random();
+         Tile[][] temp= new Tile[5][5];
+         int holder1;
+         int holder2;
          boolean[][] check=new boolean[size][size];
          int count=0;
          int orgRValue=0;
@@ -88,7 +111,15 @@ public class GameBoard  extends JPanel implements ICardListener
              int rValue= random1.nextInt(size);
              int cValue= random2.nextInt(size);
              if(check[rValue][cValue]==false){
+                 
+                 
+                 temp[orgRValue][orgCValue]=tiles[rValue][cValue];
                  tiles[rValue][cValue]=tiles[orgRValue][orgCValue];
+                 tiles[rValue][cValue].rValue=rValue;
+                 tiles[rValue][cValue].cValue=cValue;
+                 tiles[orgRValue][orgCValue]=temp[orgRValue][orgCValue];
+                 tiles[orgRValue][orgCValue].cValue=orgCValue;
+                 tiles[orgRValue][orgCValue].rValue=orgRValue;
                  check[rValue][cValue]=true;
                  orgCValue++;
                  if(orgCValue==(size)){
@@ -106,6 +137,9 @@ public class GameBoard  extends JPanel implements ICardListener
      
     @Override
     public void cardClicked(Tile tile) {
+        
+            
+        System.out.println(tile);
         
 //        card.flip();
 //        if(firstCard == null)
@@ -204,7 +238,7 @@ public class GameBoard  extends JPanel implements ICardListener
         //4 pieces of each of the 6 colors to be 
         
         //backColors = new ArrayList;
-        tileColors = new Color[5][5];
+        //tileColors = new Color[5][5];
         Random random = new Random();
         
         int r=0;
@@ -248,6 +282,7 @@ public class GameBoard  extends JPanel implements ICardListener
             //backColors.add(newColor);
             
         }
+       tileColors[4][4]= BLACK;
     }
 
     

@@ -74,7 +74,7 @@ public class Rubiks extends JFrame
 //               }
 //            }
 //        });
-        
+//        
 //        showSolution.addActionListener(new ActionListener(){
 //            @Override
 //            public void actionPerformed(ActionEvent ae) {
@@ -86,7 +86,7 @@ public class Rubiks extends JFrame
 //               }
 //            }
 //        });
-        
+//        
 //        viewHighScores.addActionListener(new ActionListener(){
 //            @Override
 //            public void actionPerformed(ActionEvent ae) {
