@@ -138,46 +138,58 @@ public class GameBoard  extends JPanel implements ICardListener
     @Override
     public void cardClicked(Tile tile) {
         
-            
+         
+         Color temp;
         System.out.println(tile);
-        
-//        card.flip();
-//        if(firstCard == null)
-//        {
-//            firstCard = card;
-//        }
-//        else if(secondCard == null)
-//        {
-//            secondCard = card;
-//            
-//            if(firstCard.getBackColor() == secondCard.getBackColor())
-//            {
-//                firstCard.makeMatched();
-//                secondCard.makeMatched();
-//            }
-//            else
-//            {
-//                try {
-//                    Thread.sleep(700);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                firstCard.flipBack();
-//                secondCard.flipBack();  
-//            }
-//
-//            firstCard = null;
-//            secondCard = null;
-//        }
-//        finishedGame = checkWinsetColors();();
-//        if(finishedGame)
-//        {  
-//            try {
-//                endGame();
-//            } catch (FileNotFoundException ex) {
-//                Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+        if(tile.rValue==BlackRowValue){
+            if(tile.cValue>BlackColValue){
+                
+                for(int i=BlackColValue;i<tile.cValue;i++){
+                    temp=tiles[tile.rValue][(i+1)].frontColor;
+                    tiles[tile.rValue][i].frontColor=temp;
+                    tiles[tile.rValue][i].setBackColor(tiles[tile.rValue][i].frontColor);
+                }
+                
+                
+            }
+            else{
+                
+                for(int i=BlackColValue;i>tile.cValue;i--){
+                    temp=tiles[tile.rValue][(i-1)].frontColor;
+                    tiles[tile.rValue][i].frontColor=temp;
+                    tiles[tile.rValue][i].setBackColor(tiles[tile.rValue][i].frontColor);
+                }
+            }
+            tiles[tile.rValue][tile.cValue].frontColor=BLACK;  
+            tiles[tile.rValue][tile.cValue].setBackColor(tiles[tile.rValue][tile.cValue].frontColor);
+            BlackRowValue=tile.rValue;
+            BlackColValue=tile.cValue;
+        }
+        else if(tile.cValue==BlackColValue){
+             if(tile.rValue>BlackRowValue){
+                
+                for(int i=BlackRowValue;i<tile.rValue;i++){
+                    temp=tiles[(i+1)][tile.cValue].frontColor;
+                    tiles[i][tile.cValue].frontColor=temp;
+                    tiles[i][tile.cValue].setBackColor(tiles[i][tile.cValue].frontColor);
+                }
+                
+                
+            }
+            else{
+                
+                for(int i=BlackRowValue;i>tile.rValue;i--){
+                    temp=tiles[(i-1)][tile.cValue].frontColor;
+                    tiles[i][tile.cValue].frontColor=temp;
+                    tiles[i][tile.cValue].setBackColor(tiles[i][tile.cValue].frontColor);
+                }
+            }
+            tiles[tile.rValue][tile.cValue].frontColor=BLACK; 
+            tiles[tile.rValue][tile.cValue].setBackColor(tiles[tile.rValue][tile.cValue].frontColor);
+            BlackRowValue=tile.rValue;
+            BlackColValue=tile.cValue;
+        }
+
     }
     
     public void endGame() throws FileNotFoundException
