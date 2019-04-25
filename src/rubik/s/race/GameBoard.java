@@ -10,6 +10,7 @@ package rubik.s.race;
  * @author robert
  */
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,13 +24,15 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 
 
 
-public class GameBoard  extends JPanel implements ICardListener
+public class GameBoard extends JPanel implements ICardListener
 {
     private final int ROWS = 5;
     private final int COLUMNS = 5;
@@ -45,18 +48,22 @@ public class GameBoard  extends JPanel implements ICardListener
     private long timePlayed = 0;
     private ArrayList<Long> highscores = new ArrayList();
     private Color BLACK = new Color(0,0,0);
-
+    public Solution realSolution;
+    private boolean gameCheck;
     
     public GameBoard()
     {
         setLayout(new GridLayout(ROWS, COLUMNS));
         initializeTiles();
+        Solution solution = new Solution(tileColors);
+        realSolution=solution;
     }
 
 
      public void initializeTiles()
     {
         setColors();
+        
         //cards = new ArrayList();
         for(int r = 0; r < 5; r++)
         {
@@ -140,7 +147,7 @@ public class GameBoard  extends JPanel implements ICardListener
         
          
          Color temp;
-        System.out.println(tile);
+        
         if(tile.rValue==BlackRowValue){
             if(tile.cValue>BlackColValue){
                 
@@ -189,8 +196,34 @@ public class GameBoard  extends JPanel implements ICardListener
             BlackRowValue=tile.rValue;
             BlackColValue=tile.cValue;
         }
+        
+        
+        
+        //winGame();
+        checkWin();
+        if(gameCheck==true){
+            try{
+            endGame();}
+            catch (FileNotFoundException ex) {
+                Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);}
+        }
 
     }
+    
+    public void winGame(){
+        for(int r = 1; r < 4; r++)
+        {
+            for(int c=1;c<4;c++){
+                
+                
+                tiles[r][c].frontColor=realSolution.gb.solTiles[r-1][c-1].frontColor;
+                tiles[r][c].setBackColor(tiles[r][c].frontColor);
+            }
+        }
+        
+        
+    }
+    
     
     public void endGame() throws FileNotFoundException
     {
@@ -200,9 +233,25 @@ public class GameBoard  extends JPanel implements ICardListener
         highscores.add(timePlayed);
         Collections.sort(highscores);
         
-        JOptionPane.showMessageDialog(null,
+        Object[] options = {"Restart", "Continue"};
+
+        int restart = JOptionPane.showOptionDialog(null,
         "Memory Game Completed in " + timePlayed + " seconds",
-          "Highscores",JOptionPane.PLAIN_MESSAGE);
+        "Highscores",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE,
+        null,     
+        options,  
+        options[0]); 
+        
+        if(restart == JOptionPane.YES_OPTION)
+        {
+            Rubiks newGame = new Rubiks();
+            realSolution.dispose();
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
+
+        }
          
         
         ObjectOutputStream oos = null;
@@ -229,20 +278,69 @@ public class GameBoard  extends JPanel implements ICardListener
         return result;
     }
     
-    private boolean checkWin()
+    public void checkWin()
     {
-        boolean gameFinished = true;
+        boolean gameFinished1 = true;
+        boolean gameFinished2 = true;
+        boolean gameFinished3 = true;
+        boolean gameFinished4 = true;
+        Tile[][] holder= new Tile[3][3];
         
-        for(int r = 0; r < 3; r++)
+        for(int r = 1; r < 4; r++)
         {
-            for(int c=0;c<3;c++){
-//                if(!tiles[r][c].getIsMatched())
-//                {
-//                    gameFinished = false;
-//                }
+            for(int c=1;c<4;c++){
+                if(tiles[r][c].frontColor!=realSolution.gb.solTiles[r-1][c-1].frontColor)
+                {
+                    gameFinished1 = false;
+                }
             }
         }
-        return gameFinished;
+        holder=rotate(realSolution.gb.solTiles);
+        
+        for(int r = 1; r < 4; r++)
+        {
+            for(int c=1;c<4;c++){
+                if(tiles[r][c].frontColor!=holder[r-1][c-1].frontColor)
+                {
+                    gameFinished2 = false;
+                }
+            }
+        }
+        holder=rotate(holder);
+        for(int r = 1; r < 4; r++)
+        {
+            for(int c=1;c<4;c++){
+                if(tiles[r][c].frontColor!=holder[r-1][c-1].frontColor)
+                {
+                    gameFinished3 = false;
+                }
+            }
+        }
+        holder=rotate(holder);
+        for(int r = 1; r < 4; r++)
+        {
+            for(int c=1;c<4;c++){
+                if(tiles[r][c].frontColor!=holder[r-1][c-1].frontColor)
+                {
+                    gameFinished4 = false;
+                }
+            }
+        }
+        boolean gameFinished = false;
+        if(gameFinished1==true){
+            gameFinished=true;
+        }
+        if(gameFinished2==true){
+            gameFinished=true;
+        }
+        if(gameFinished3==true){
+            gameFinished=true;
+        }
+        if(gameFinished4==true){
+            gameFinished=true;
+        }
+        
+        gameCheck=gameFinished;
     }
     
     public void setColors()
@@ -260,7 +358,9 @@ public class GameBoard  extends JPanel implements ICardListener
             float red = random.nextFloat();
             float green = random.nextFloat();
             float blue = random.nextFloat();  
-            Color newColor = new Color(red, green, blue);
+            
+            
+            Color newColor = new Color((red), (green), (blue));
             if(c==5){
                 r++;
                 c=0;
@@ -300,10 +400,10 @@ public class GameBoard  extends JPanel implements ICardListener
     
    
 
-        /*
+        
     public void showHighScores()
     {
-        for(int i = 0; i < cards.size(); i++)
+        for(int i = 0; i < 25; i++)
                {
                     File f = new File("highscores.ser");
                     if(f.exists()) { 
@@ -336,10 +436,59 @@ public class GameBoard  extends JPanel implements ICardListener
 
                     JOptionPane.showMessageDialog(null,
                         scoreOutput, "Highscores",JOptionPane.PLAIN_MESSAGE);
-    }*/
+    }
 
-//    @Override
-//    public void cardClicked(Card card) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
+
+    private Tile[][] rotate(Tile[][] solution)
+    {
+        Tile[][] returnTile= new Tile[3][3];
+        Color nw = solution[0][0].frontColor;
+        Color n = solution[0][1].frontColor;
+        Color ne = solution[0][2].frontColor;
+        Color w = solution[1][0].frontColor;
+        Color e = solution[1][2].frontColor;
+        Color sw = solution[2][0].frontColor;
+        Color s = solution[2][1].frontColor;
+        Color se = solution[2][2].frontColor;
+        Color c= solution[1][1].frontColor;
+        
+        Tile newCard = new Tile("");      
+        newCard.frontColor=sw;
+        returnTile[0][0] = newCard;
+        
+        Tile newCard2 = new Tile("");      
+        newCard2.frontColor=w;
+        returnTile[0][1] = newCard2;
+        
+        
+        Tile newCard3 = new Tile("");      
+        newCard3.frontColor=nw;
+        returnTile[0][2] = newCard3;
+        
+        Tile newCard4 = new Tile("");      
+        newCard4.frontColor=s;
+        returnTile[1][0] = newCard4;
+        
+        Tile newCard5 = new Tile("");      
+        newCard5.frontColor=c;
+        returnTile[1][1] = newCard5;
+        
+        Tile newCard6 = new Tile("");      
+        newCard6.frontColor=n;
+        returnTile[1][2] = newCard6;
+        
+        Tile newCard7 = new Tile("");      
+        newCard7.frontColor=se;
+        returnTile[2][0] = newCard7;
+        
+        Tile newCard8 = new Tile("");      
+        newCard8.frontColor=e;
+        returnTile[2][1] = newCard8;
+        
+        Tile newCard9 = new Tile("");      
+        newCard9.frontColor=ne;
+        returnTile[2][2] = newCard9;
+        
+        return solution;
+    }
 }
